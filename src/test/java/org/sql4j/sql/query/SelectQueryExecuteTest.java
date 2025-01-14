@@ -27,15 +27,8 @@ public class SelectQueryExecuteTest {
 
     @BeforeAll
     public static void setUp() throws ClassNotFoundException, SQLException {
-        // Load the H2 driver
-        Class.forName("org.h2.Driver");
-
-        // Connect to the in-memory database
-        String url = "jdbc:h2:mem:testdb"; // testdb is the database name
-        String user = "sa";
-        String password = "";
-        CON = DriverManager.getConnection(url, user, password);
-        System.out.println("Connected to H2 database!");
+        connectToH2Database();
+        //connectToMySqlDatabase();
 
         try (Statement stmt = CON.createStatement()) {
             stmt.execute("""
@@ -53,6 +46,30 @@ public class SelectQueryExecuteTest {
         for (Table1Row record : RECORDS) {
             insertRecordInTable1(record);
         }
+    }
+
+    private static void connectToH2Database() throws ClassNotFoundException, SQLException {
+        // Load the H2 driver
+        Class.forName("org.h2.Driver");
+
+        // Connect to the in-memory database
+        String url = "jdbc:h2:mem:testdb"; // testdb is the database name
+        String user = "sa";
+        String password = "";
+        CON = DriverManager.getConnection(url, user, password);
+        System.out.println("Connected to H2 database!");
+    }
+
+    private static void connectToMySqlDatabase() throws ClassNotFoundException, SQLException {
+        // Load the mysql driver
+        Class.forName("com.mysql.cj.jdbc.Driver");
+
+        // Connect to the mysql database
+        String url = "jdbc:mysql://localhost:3306/testdb"; // testdb is the database name
+        String user = System.getenv("DB_USER");
+        String password = System.getenv("DB_PASS");
+        CON = DriverManager.getConnection(url, user, password);
+        System.out.println("Connected to MySql database!");
     }
 
     @AfterAll
