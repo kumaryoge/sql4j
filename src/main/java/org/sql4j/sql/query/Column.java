@@ -3,6 +3,8 @@ package org.sql4j.sql.query;
 import lombok.Getter;
 
 import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Optional;
 
 @Getter
@@ -12,6 +14,8 @@ public class Column<T> {
     public static final Column<Integer> COL_2 = new Column<>("COL_2");
     public static final Column<Double> COL_3 = new Column<>("COL_3");
     public static final Column<Date> COL_4 = new Column<>("COL_4");
+    public static final Column<Time> COL_5 = new Column<>("COL_5");
+    public static final Column<Timestamp> COL_6 = new Column<>("COL_6");
 
     private final String name;
     private final String alias;
