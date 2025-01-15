@@ -31,7 +31,7 @@ public class SelectQuery {
 
     private static class Context {
         private final StringBuilder sqlBuilder = new StringBuilder();
-        private final List<Object> objects = new ArrayList<>();
+        private final List<Object> params = new ArrayList<>();
     }
 
     public static class ConditionableSelectQuery extends GroupableSelectQuery {
@@ -44,7 +44,7 @@ public class SelectQuery {
             context.sqlBuilder.append("WHERE\n    ")
                     .append(filter.getCondition())
                     .append("\n");
-            context.objects.addAll(List.of(filter.getObjects()));
+            context.params.addAll(filter.getParams());
             return this;
         }
     }
@@ -90,17 +90,12 @@ public class SelectQuery {
             this.context = context;
         }
 
-        String build() {
-            return context.sqlBuilder.toString() + ";";
-        }
-
         public <T> List<T> execute(Connection con, ResultSetMapper<T> resultSetMapper) throws SQLException {
             List<T> results = new ArrayList<>();
-            String sql = build();
 
-            try (PreparedStatement stmt = con.prepareStatement(sql)) {
-                for (int i = 0; i < context.objects.size(); ++i) {
-                    stmt.setObject(i + 1, context.objects.get(i));
+            try (PreparedStatement stmt = con.prepareStatement(sql())) {
+                for (int i = 0; i < context.params.size(); ++i) {
+                    stmt.setObject(i + 1, context.params.get(i));
                 }
 
                 ResultSet rs = stmt.executeQuery();
@@ -110,6 +105,14 @@ public class SelectQuery {
             }
 
             return results;
+        }
+
+        String sql() {
+            return context.sqlBuilder.toString() + ";";
+        }
+
+        List<Object> params() {
+            return context.params;
         }
     }
 }

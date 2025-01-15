@@ -3,31 +3,32 @@ package org.sql4j.sql.query;
 import lombok.Getter;
 import lombok.NonNull;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 @Getter
 public class Filter {
     @NonNull
     private final String condition;
     @NonNull
-    private final Object[] objects;
+    private final List<Object> params;
 
-    Filter(@NonNull String condition, @NonNull Object... objects) {
-        Arrays.stream(objects).forEach(Objects::requireNonNull);
+    Filter(@NonNull String condition, @NonNull List<Object> params) {
+        params.forEach(Objects::requireNonNull);
         this.condition = condition;
-        this.objects = objects;
+        this.params = params;
     }
 
     public Filter and(@NonNull Filter other) {
-        return new Filter(condition + "\n    AND " + other.condition, objects, other.objects);
+        return new Filter(condition + "\n    AND " + other.condition, Stream.concat(params.stream(), other.params.stream()).toList());
     }
 
     public Filter or(@NonNull Filter other) {
-        return new Filter(condition + "\n     OR " + other.condition, objects, other.objects);
+        return new Filter(condition + "\n     OR " + other.condition, Stream.concat(params.stream(), other.params.stream()).toList());
     }
 
     public Filter negate() {
-        return new Filter("NOT " + condition, objects);
+        return new Filter("NOT " + condition, params.stream().toList());
     }
 }

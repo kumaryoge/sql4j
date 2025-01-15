@@ -7,8 +7,10 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Getter
 public class Column<T> {
@@ -72,61 +74,61 @@ public class Column<T> {
     }
 
     public Filter equalTo(@NonNull T value) {
-        return new Filter(name + " = ?", value);
+        return new Filter(name + " = ?", List.of(value));
     }
 
     public Filter notEqualTo(@NonNull T value) {
-        return new Filter(name + " != ?", value);
+        return new Filter(name + " != ?", List.of(value));
     }
 
     public Filter greaterThan(@NonNull T value) {
-        return new Filter(name + " > ?", value);
+        return new Filter(name + " > ?", List.of(value));
     }
 
     public Filter greaterThanOrEqualTo(@NonNull T value) {
-        return new Filter(name + " >= ?", value);
+        return new Filter(name + " >= ?", List.of(value));
     }
 
     public Filter lessThan(@NonNull T value) {
-        return new Filter(name + " < ?", value);
+        return new Filter(name + " < ?", List.of(value));
     }
 
     public Filter lessThanOrEqualTo(@NonNull T value) {
-        return new Filter(name + " <= ?", value);
+        return new Filter(name + " <= ?", List.of(value));
     }
 
     public Filter between(@NonNull T value1, @NonNull T value2) {
-        return new Filter(name + " BETWEEN ? AND ?", value1, value2);
+        return new Filter(name + " BETWEEN ? AND ?", List.of(value1, value2));
     }
 
     public Filter notBetween(@NonNull T value1, @NonNull T value2) {
-        return new Filter(name + " NOT BETWEEN ? AND ?", value1, value2);
+        return new Filter(name + " NOT BETWEEN ? AND ?", List.of(value1, value2));
     }
 
     public Filter like(@NonNull T value) {
-        return new Filter(name + " LIKE ?", value);
+        return new Filter(name + " LIKE ?", List.of(value));
     }
 
     public Filter notLike(@NonNull T value) {
-        return new Filter(name + " NOT LIKE ?", value);
+        return new Filter(name + " NOT LIKE ?", List.of(value));
     }
 
     public Filter in(@NonNull T value, @NonNull T... values) {
         Arrays.stream(values).forEach(Objects::requireNonNull);
-        return new Filter(name + " IN (?" + ", ?".repeat(values.length) + ")", value, values);
+        return new Filter(name + " IN (?" + ", ?".repeat(values.length) + ")", (List<Object>) Stream.concat(Stream.of(value), Arrays.stream(values)).toList());
     }
 
     public Filter notIn(@NonNull T value, @NonNull T... values) {
         Arrays.stream(values).forEach(Objects::requireNonNull);
-        return new Filter(name + " NOT IN (?" + ", ?".repeat(values.length) + ")", value, values);
+        return new Filter(name + " NOT IN (?" + ", ?".repeat(values.length) + ")", (List<Object>) Stream.concat(Stream.of(value), Arrays.stream(values)).toList());
     }
 
     public Filter isNull() {
-        return new Filter(name + " IS NULL");
+        return new Filter(name + " IS NULL", List.of());
     }
 
     public Filter isNotNull() {
-        return new Filter(name + " IS NOT NULL");
+        return new Filter(name + " IS NOT NULL", List.of());
     }
 
     public enum Order {

@@ -342,6 +342,7 @@ public class SelectQueryExecuteTest {
                 SqlQuery.select(ALL)
                         .from(TABLE_1)
                         .where(COL_1.equalTo("test1")
+                                .and(COL_2.equalTo(10))
                                 .and(COL_6.lessThan(Timestamp.valueOf("2025-01-06 01:01:07"))))
                         .execute(CON, rs -> Table1Row.builder()
                                 .col1(rs.getString(COL_1.getName()))
@@ -351,9 +352,9 @@ public class SelectQueryExecuteTest {
                                 .col5(rs.getTime(COL_5.getName()))
                                 .col6(rs.getTimestamp(COL_6.getName()))
                                 .build());
-        assertEquals(RECORDS.stream().filter(record -> record.col1.equals("test1") && record.col6 != null && record.col6.before(Timestamp.valueOf("2025-01-06 01:01:07"))).count(), results.size());
+        assertEquals(RECORDS.stream().filter(record -> record.col1.equals("test1") && record.col2 == 10 && record.col6 != null && record.col6.before(Timestamp.valueOf("2025-01-06 01:01:07"))).count(), results.size());
         RECORDS.stream()
-                .filter(record -> record.col1.equals("test1") && record.col6 != null && record.col6.before(Timestamp.valueOf("2025-01-06 01:01:07")))
+                .filter(record -> record.col1.equals("test1") && record.col2 == 10 && record.col6 != null && record.col6.before(Timestamp.valueOf("2025-01-06 01:01:07")))
                 .forEach(record -> assertTrue(results.contains(record)));
     }
 

@@ -1,6 +1,7 @@
 package org.sql4j.sql.query;
 
 import org.junit.jupiter.api.Test;
+import org.sql4j.sql.query.SelectQuery.ExecutableSelectQuery;
 
 import java.sql.Date;
 
@@ -23,12 +24,12 @@ public class SelectQueryBuildTest {
                     TABLE_1
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(COL_1)
-                        .from(TABLE_1)
-                        .build();
+                        .from(TABLE_1);
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(0, query.params().size());
     }
 
     @Test
@@ -41,12 +42,12 @@ public class SelectQueryBuildTest {
                     TABLE_1
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2)
-                        .from(TABLE_1)
-                        .build();
+                        .from(TABLE_1);
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(0, query.params().size());
     }
 
     @Test
@@ -62,12 +63,12 @@ public class SelectQueryBuildTest {
                     TABLE_2
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
-                        .from(TABLE_1, TABLE_2)
-                        .build();
+                        .from(TABLE_1, TABLE_2);
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(0, query.params().size());
     }
 
     @Test
@@ -79,12 +80,12 @@ public class SelectQueryBuildTest {
                     TABLE_1
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(ALL)
-                        .from(TABLE_1)
-                        .build();
+                        .from(TABLE_1);
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(0, query.params().size());
     }
 
     @Test
@@ -96,12 +97,12 @@ public class SelectQueryBuildTest {
                     TABLE_1
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(ALL.count())
-                        .from(TABLE_1)
-                        .build();
+                        .from(TABLE_1);
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(0, query.params().size());
     }
 
     @Test
@@ -113,12 +114,12 @@ public class SelectQueryBuildTest {
                     TABLE_1
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(COL_1.count())
-                        .from(TABLE_1)
-                        .build();
+                        .from(TABLE_1);
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(0, query.params().size());
     }
 
     @Test
@@ -130,12 +131,12 @@ public class SelectQueryBuildTest {
                     TABLE_1
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(COL_1.distinct())
-                        .from(TABLE_1)
-                        .build();
+                        .from(TABLE_1);
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(0, query.params().size());
     }
 
     @Test
@@ -147,12 +148,12 @@ public class SelectQueryBuildTest {
                     TABLE_1
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(COL_2.distinct())
-                        .from(TABLE_1)
-                        .build();
+                        .from(TABLE_1);
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(0, query.params().size());
     }
 
     @Test
@@ -164,12 +165,12 @@ public class SelectQueryBuildTest {
                     TABLE_1
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(COL_2.countDistinct())
-                        .from(TABLE_1)
-                        .build();
+                        .from(TABLE_1);
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(0, query.params().size());
     }
 
     @Test
@@ -187,13 +188,13 @@ public class SelectQueryBuildTest {
                     COL_1 = ?
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
                         .from(TABLE_1, TABLE_2)
-                        .where(COL_1.equalTo("test"))
-                        .build();
+                        .where(COL_1.equalTo("test"));
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(1, query.params().size());
     }
 
     @Test
@@ -216,16 +217,16 @@ public class SelectQueryBuildTest {
                      OR COL_4 = ?
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
                         .from(TABLE_1, TABLE_2)
                         .where(COL_1.equalTo("test")
                                 .and(COL_2.equalTo(1))
                                 .or(COL_3.equalTo(2.0))
-                                .or(COL_4.equalTo(currentDate)))
-                        .build();
+                                .or(COL_4.equalTo(currentDate)));
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(4, query.params().size());
     }
 
     @Test
@@ -250,17 +251,17 @@ public class SelectQueryBuildTest {
                     COL_1
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
                         .from(TABLE_1, TABLE_2)
                         .where(COL_1.equalTo("test")
                                 .and(COL_2.equalTo(1))
                                 .or(COL_3.equalTo(2.0))
                                 .or(COL_4.equalTo(currentDate)))
-                        .groupBy(COL_1)
-                        .build();
+                        .groupBy(COL_1);
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(4, query.params().size());
     }
 
     @Test
@@ -286,17 +287,17 @@ public class SelectQueryBuildTest {
                     COL_2
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
                         .from(TABLE_1, TABLE_2)
                         .where(COL_1.equalTo("test")
                                 .and(COL_2.equalTo(1))
                                 .or(COL_3.equalTo(2.0))
                                 .or(COL_4.equalTo(currentDate)))
-                        .groupBy(COL_1, COL_2)
-                        .build();
+                        .groupBy(COL_1, COL_2);
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(4, query.params().size());
     }
 
     @Test
@@ -321,17 +322,17 @@ public class SelectQueryBuildTest {
                     COL_1
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
                         .from(TABLE_1, TABLE_2)
                         .where(COL_1.equalTo("test")
                                 .and(COL_2.equalTo(1))
                                 .or(COL_3.equalTo(2.0))
                                 .or(COL_4.equalTo(currentDate)))
-                        .orderBy(COL_1)
-                        .build();
+                        .orderBy(COL_1);
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(4, query.params().size());
     }
 
     @Test
@@ -359,17 +360,17 @@ public class SelectQueryBuildTest {
                     COL_4 DESC
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
                         .from(TABLE_1, TABLE_2)
                         .where(COL_1.equalTo("test")
                                 .and(COL_2.equalTo(1))
                                 .or(COL_3.equalTo(2.0))
                                 .or(COL_4.equalTo(currentDate)))
-                        .orderBy(COL_1, COL_2, COL_3.asc(), COL_4.desc())
-                        .build();
+                        .orderBy(COL_1, COL_2, COL_3.asc(), COL_4.desc());
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(4, query.params().size());
     }
 
     @Test
@@ -412,7 +413,7 @@ public class SelectQueryBuildTest {
                     COL_4 DESC
                 ;""";
 
-        String actualSql =
+        ExecutableSelectQuery query =
                 SqlQuery.select(C_1, COL_2, COL_3, COL_4)
                         .from(T_1, T_2)
                         .where(C_1.equalTo("test").negate()
@@ -435,9 +436,9 @@ public class SelectQueryBuildTest {
                                 .and(C_1.isNotNull())
                         )
                         .groupBy(C_1, COL_2)
-                        .orderBy(C_1, COL_2, COL_3.asc(), COL_4.desc())
-                        .build();
+                        .orderBy(C_1, COL_2, COL_3.asc(), COL_4.desc());
 
-        assertEquals(expectedSql, actualSql);
+        assertEquals(expectedSql, query.sql());
+        assertEquals(22, query.params().size());
     }
 }
