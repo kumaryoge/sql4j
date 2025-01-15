@@ -14,13 +14,17 @@ List<String> results =
 List<Table1Row> results =
                 SqlQuery.select(COL_1, COL_2)
                         .from(TABLE_1)
-                        .where(COL_1.equalTo("test1"))
+                        .where(COL_1.equalTo("test1")
+                                .and(COL_2.lessThan(2)))
                         .execute(connection, rs -> Table1Row.builder()
                                 .col1(rs.getString(COL_1.getName()))
                                 .col2(rs.getInt(COL_2.getName()))
                                 .build());
+
+@lombok.Builder
+private record Table1Row(String col1, int col2) {}
 ```
 
 Checkout more examples in
-* [SelectQueryBuildTest.java](src/test/java/org/sql4j/sql/query/SelectQueryBuildTest.java) for building sql queries, and
-* [SelectQueryExecuteTest.java](src/test/java/org/sql4j/sql/query/SelectQueryExecuteTest.java) for executing sql queries
+* [SelectQueryBuildTest.java](src/test/java/org/sql4j/sql/query/SelectQueryBuildTest.java)
+* [SelectQueryExecuteTest.java](src/test/java/org/sql4j/sql/query/SelectQueryExecuteTest.java)
