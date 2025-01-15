@@ -184,7 +184,7 @@ public class SelectQueryBuildTest {
                     TABLE_1,
                     TABLE_2
                 WHERE
-                    COL_1 = 'test'
+                    COL_1 = ?
                 ;""";
 
         String actualSql =
@@ -210,11 +210,11 @@ public class SelectQueryBuildTest {
                     TABLE_1,
                     TABLE_2
                 WHERE
-                    COL_1 = 'test'
-                    AND COL_2 = 1
-                     OR COL_3 = 2.0
-                     OR COL_4 = '%s'
-                ;""".formatted(currentDate);
+                    COL_1 = ?
+                    AND COL_2 = ?
+                     OR COL_3 = ?
+                     OR COL_4 = ?
+                ;""";
 
         String actualSql =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
@@ -242,13 +242,13 @@ public class SelectQueryBuildTest {
                     TABLE_1,
                     TABLE_2
                 WHERE
-                    COL_1 = 'test'
-                    AND COL_2 = 1
-                     OR COL_3 = 2.0
-                     OR COL_4 = '%s'
+                    COL_1 = ?
+                    AND COL_2 = ?
+                     OR COL_3 = ?
+                     OR COL_4 = ?
                 GROUP BY
                     COL_1
-                ;""".formatted(currentDate);
+                ;""";
 
         String actualSql =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
@@ -277,14 +277,14 @@ public class SelectQueryBuildTest {
                     TABLE_1,
                     TABLE_2
                 WHERE
-                    COL_1 = 'test'
-                    AND COL_2 = 1
-                     OR COL_3 = 2.0
-                     OR COL_4 = '%s'
+                    COL_1 = ?
+                    AND COL_2 = ?
+                     OR COL_3 = ?
+                     OR COL_4 = ?
                 GROUP BY
                     COL_1,
                     COL_2
-                ;""".formatted(currentDate);
+                ;""";
 
         String actualSql =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
@@ -313,13 +313,13 @@ public class SelectQueryBuildTest {
                     TABLE_1,
                     TABLE_2
                 WHERE
-                    COL_1 = 'test'
-                    AND COL_2 = 1
-                     OR COL_3 = 2.0
-                     OR COL_4 = '%s'
+                    COL_1 = ?
+                    AND COL_2 = ?
+                     OR COL_3 = ?
+                     OR COL_4 = ?
                 ORDER BY
                     COL_1
-                ;""".formatted(currentDate);
+                ;""";
 
         String actualSql =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
@@ -348,16 +348,16 @@ public class SelectQueryBuildTest {
                     TABLE_1,
                     TABLE_2
                 WHERE
-                    COL_1 = 'test'
-                    AND COL_2 = 1
-                     OR COL_3 = 2.0
-                     OR COL_4 = '%s'
+                    COL_1 = ?
+                    AND COL_2 = ?
+                     OR COL_3 = ?
+                     OR COL_4 = ?
                 ORDER BY
                     COL_1,
                     COL_2,
                     COL_3 ASC,
                     COL_4 DESC
-                ;""".formatted(currentDate);
+                ;""";
 
         String actualSql =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
@@ -384,22 +384,22 @@ public class SelectQueryBuildTest {
                     TABLE_1 AS T_1,
                     TABLE_2 AS T_2
                 WHERE
-                    NOT T_1.COL_1 = 'test'
-                    AND NOT COL_2 = 1
-                     OR COL_3 = 2.0
-                    AND T_1.COL_1 != 'test'
-                    AND T_1.COL_1 > 'test'
-                    AND T_1.COL_1 >= 'test'
-                    AND T_1.COL_1 < 'test'
-                    AND T_1.COL_1 <= 'test'
-                    AND T_1.COL_1 BETWEEN 'test1' AND 'test2'
-                    AND T_1.COL_1 NOT BETWEEN 'test1' AND 'test2'
-                    AND T_1.COL_1 LIKE '%test%'
-                    AND T_1.COL_1 NOT LIKE '%test'
-                    AND T_1.COL_1 IN ('test1')
-                    AND T_1.COL_1 IN ('test1', 'test2', 'test3')
-                    AND T_1.COL_1 NOT IN ('test1')
-                    AND T_1.COL_1 NOT IN ('test1', 'test2', 'test3')
+                    NOT T_1.COL_1 = ?
+                    AND NOT COL_2 = ?
+                     OR COL_3 = ?
+                    AND T_1.COL_1 != ?
+                    AND T_1.COL_1 > ?
+                    AND T_1.COL_1 >= ?
+                    AND T_1.COL_1 < ?
+                    AND T_1.COL_1 <= ?
+                    AND T_1.COL_1 BETWEEN ? AND ?
+                    AND T_1.COL_1 NOT BETWEEN ? AND ?
+                    AND T_1.COL_1 LIKE ?
+                    AND T_1.COL_1 NOT LIKE ?
+                    AND T_1.COL_1 IN (?)
+                    AND T_1.COL_1 IN (?, ?, ?)
+                    AND T_1.COL_1 NOT IN (?)
+                    AND T_1.COL_1 NOT IN (?, ?, ?)
                     AND T_1.COL_1 IS NULL
                     AND T_1.COL_1 IS NOT NULL
                 GROUP BY

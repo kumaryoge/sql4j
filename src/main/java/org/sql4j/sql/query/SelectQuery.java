@@ -1,55 +1,63 @@
 package org.sql4j.sql.query;
 
+import lombok.NonNull;
+
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SelectQuery {
-    private final StringBuilder sqlBuilder = new StringBuilder();
+    private final Context context = new Context();
 
-    public SelectQuery(Column<?> column, Column<?>[] columns) {
-        sqlBuilder.append("SELECT\n    ")
+    SelectQuery(@NonNull Column<?> column, @NonNull Column<?>[] columns) {
+        Arrays.stream(columns).forEach(Objects::requireNonNull);
+        context.sqlBuilder.append("SELECT\n    ")
                 .append(Stream.concat(Stream.of(column), Arrays.stream(columns))
                         .map(c -> c.getName() + Optional.ofNullable(c.getAlias()).map(alias -> " AS " + alias).orElse(""))
                         .collect(Collectors.joining(",\n    ")))
                 .append("\n");
     }
 
-    public ConditionableSelectQuery from(Table table, Table... tables) {
-        sqlBuilder.append("FROM\n    ")
+    public ConditionableSelectQuery from(@NonNull Table table, @NonNull Table... tables) {
+        Arrays.stream(tables).forEach(Objects::requireNonNull);
+        context.sqlBuilder.append("FROM\n    ")
                 .append(Stream.concat(Stream.of(table), Arrays.stream(tables))
                         .map(t -> t.getName() + Optional.ofNullable(t.getAlias()).map(alias -> " AS " + alias).orElse(""))
                         .collect(Collectors.joining(",\n    ")))
                 .append("\n");
-        return new ConditionableSelectQuery(sqlBuilder);
+        return new ConditionableSelectQuery(context);
+    }
+
+    private static class Context {
+        private final StringBuilder sqlBuilder = new StringBuilder();
+        private final List<Object> objects = new ArrayList<>();
     }
 
     public static class ConditionableSelectQuery extends GroupableSelectQuery {
 
-        public ConditionableSelectQuery(StringBuilder sqlBuilder) {
-            super(sqlBuilder);
+        private ConditionableSelectQuery(Context context) {
+            super(context);
         }
 
-        public GroupableSelectQuery where(Filter filter) {
-            sqlBuilder.append("WHERE\n    ")
+        public GroupableSelectQuery where(@NonNull Filter filter) {
+            context.sqlBuilder.append("WHERE\n    ")
                     .append(filter.getCondition())
                     .append("\n");
+            context.objects.addAll(List.of(filter.getObjects()));
             return this;
         }
     }
 
     public static class GroupableSelectQuery extends OrderableSelectQuery {
 
-        public GroupableSelectQuery(StringBuilder sqlBuilder) {
-            super(sqlBuilder);
+        private GroupableSelectQuery(Context context) {
+            super(context);
         }
 
-        public OrderableSelectQuery groupBy(Column<?> column, Column<?>... columns) {
-            sqlBuilder.append("GROUP BY\n    ")
+        public OrderableSelectQuery groupBy(@NonNull Column<?> column, @NonNull Column<?>... columns) {
+            Arrays.stream(columns).forEach(Objects::requireNonNull);
+            context.sqlBuilder.append("GROUP BY\n    ")
                     .append(Stream.concat(Stream.of(column), Arrays.stream(columns))
                             .map(Column::getName)
                             .collect(Collectors.joining(",\n    ")))
@@ -60,12 +68,13 @@ public class SelectQuery {
 
     public static class OrderableSelectQuery extends ExecutableSelectQuery {
 
-        public OrderableSelectQuery(StringBuilder sqlBuilder) {
-            super(sqlBuilder);
+        private OrderableSelectQuery(Context context) {
+            super(context);
         }
 
-        public ExecutableSelectQuery orderBy(Column<?> column, Column<?>... columns) {
-            sqlBuilder.append("ORDER BY\n    ")
+        public ExecutableSelectQuery orderBy(@NonNull Column<?> column, @NonNull Column<?>... columns) {
+            Arrays.stream(columns).forEach(Objects::requireNonNull);
+            context.sqlBuilder.append("ORDER BY\n    ")
                     .append(Stream.concat(Stream.of(column), Arrays.stream(columns))
                             .map(c -> c.getName() + (c.getOrder() != null ? (" " + c.getOrder()) : ""))
                             .collect(Collectors.joining(",\n    ")))
@@ -75,23 +84,26 @@ public class SelectQuery {
     }
 
     public static class ExecutableSelectQuery {
-        protected final StringBuilder sqlBuilder;
+        protected final Context context;
 
-        public ExecutableSelectQuery(StringBuilder sqlBuilder) {
-            this.sqlBuilder = sqlBuilder;
+        private ExecutableSelectQuery(Context context) {
+            this.context = context;
         }
 
-        public String build() {
-            return sqlBuilder.toString() + ";";
+        String build() {
+            return context.sqlBuilder.toString() + ";";
         }
 
         public <T> List<T> execute(Connection con, ResultSetMapper<T> resultSetMapper) throws SQLException {
             List<T> results = new ArrayList<>();
+            String sql = build();
 
-            try (Statement stmt = con.createStatement()) {
-                String query = build();
-                ResultSet rs = stmt.executeQuery(query);
+            try (PreparedStatement stmt = con.prepareStatement(sql)) {
+                for (int i = 0; i < context.objects.size(); ++i) {
+                    stmt.setObject(i + 1, context.objects.get(i));
+                }
 
+                ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
                     results.add(resultSetMapper.map(rs));
                 }

@@ -1,10 +1,13 @@
 package org.sql4j.sql.query;
 
 import lombok.Getter;
+import lombok.NonNull;
 
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 
 @Getter
@@ -17,19 +20,20 @@ public class Column<T> {
     public static final Column<Time> COL_5 = new Column<>("COL_5");
     public static final Column<Timestamp> COL_6 = new Column<>("COL_6");
 
+    @NonNull
     private final String name;
     private final String alias;
     private final Order order;
 
-    private Column(String name) {
+    private Column(@NonNull String name) {
         this(name, null);
     }
 
-    private Column(String name, String alias) {
+    private Column(@NonNull String name, String alias) {
         this(name, alias, null);
     }
 
-    private Column(String name, String alias, Order order) {
+    private Column(@NonNull String name, String alias, Order order) {
         this.name = name;
         this.alias = alias;
         this.order = order;
@@ -51,7 +55,7 @@ public class Column<T> {
      * This allows using table alias (or name if alias doesn't exist) as a qualifier for column name in sql query
      * e.g. for table alias 'A' and Column name 'B', the new column name used in sql query would be 'A.B'
      */
-    public Column<T> of(Table table) {
+    public Column<T> of(@NonNull Table table) {
         return new Column<>(Optional.ofNullable(table.getAlias()).orElse(table.getName()) + "." + name, alias, order);
     }
 
@@ -67,52 +71,54 @@ public class Column<T> {
         return new Column<>("COUNT(DISTINCT " + name + ")", alias, order);
     }
 
-    public Filter equalTo(T value) {
-        return new Filter(name + " = " + quote(value));
+    public Filter equalTo(@NonNull T value) {
+        return new Filter(name + " = ?", value);
     }
 
-    public Filter notEqualTo(T value) {
-        return new Filter(name + " != " + quote(value));
+    public Filter notEqualTo(@NonNull T value) {
+        return new Filter(name + " != ?", value);
     }
 
-    public Filter greaterThan(T value) {
-        return new Filter(name + " > " + quote(value));
+    public Filter greaterThan(@NonNull T value) {
+        return new Filter(name + " > ?", value);
     }
 
-    public Filter greaterThanOrEqualTo(T value) {
-        return new Filter(name + " >= " + quote(value));
+    public Filter greaterThanOrEqualTo(@NonNull T value) {
+        return new Filter(name + " >= ?", value);
     }
 
-    public Filter lessThan(T value) {
-        return new Filter(name + " < " + quote(value));
+    public Filter lessThan(@NonNull T value) {
+        return new Filter(name + " < ?", value);
     }
 
-    public Filter lessThanOrEqualTo(T value) {
-        return new Filter(name + " <= " + quote(value));
+    public Filter lessThanOrEqualTo(@NonNull T value) {
+        return new Filter(name + " <= ?", value);
     }
 
-    public Filter between(T value1, T value2) {
-        return new Filter(name + " BETWEEN " + quote(value1) + " AND " + quote(value2));
+    public Filter between(@NonNull T value1, @NonNull T value2) {
+        return new Filter(name + " BETWEEN ? AND ?", value1, value2);
     }
 
-    public Filter notBetween(T value1, T value2) {
-        return new Filter(name + " NOT BETWEEN " + quote(value1) + " AND " + quote(value2));
+    public Filter notBetween(@NonNull T value1, @NonNull T value2) {
+        return new Filter(name + " NOT BETWEEN ? AND ?", value1, value2);
     }
 
-    public Filter like(T value) {
-        return new Filter(name + " LIKE " + quote(value));
+    public Filter like(@NonNull T value) {
+        return new Filter(name + " LIKE ?", value);
     }
 
-    public Filter notLike(T value) {
-        return new Filter(name + " NOT LIKE " + quote(value));
+    public Filter notLike(@NonNull T value) {
+        return new Filter(name + " NOT LIKE ?", value);
     }
 
-    public Filter in(T value, T... values) {
-        return new Filter(name + " IN " + list(value, values));
+    public Filter in(@NonNull T value, @NonNull T... values) {
+        Arrays.stream(values).forEach(Objects::requireNonNull);
+        return new Filter(name + " IN (?" + ", ?".repeat(values.length) + ")", value, values);
     }
 
-    public Filter notIn(T value, T... values) {
-        return new Filter(name + " NOT IN " + list(value, values));
+    public Filter notIn(@NonNull T value, @NonNull T... values) {
+        Arrays.stream(values).forEach(Objects::requireNonNull);
+        return new Filter(name + " NOT IN (?" + ", ?".repeat(values.length) + ")", value, values);
     }
 
     public Filter isNull() {
@@ -121,22 +127,6 @@ public class Column<T> {
 
     public Filter isNotNull() {
         return new Filter(name + " IS NOT NULL");
-    }
-
-    private String list(T value, T[] values) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("(");
-        sb.append(quote(value));
-        for (T val : values) {
-            sb.append(", ");
-            sb.append(quote(val));
-        }
-        sb.append(")");
-        return sb.toString();
-    }
-
-    private String quote(T value) {
-        return value instanceof Number ? value.toString() : "'" + value + "'";
     }
 
     public enum Order {
