@@ -1,7 +1,8 @@
 # Sql4j
-This is a simple java library to simplify building and executing sql queries in java.
+This is a simple java library to simplify building and executing sql queries in java, without actually hard-coding any sql query in java code.
 
 # Usage
+Suppose, in a database, we have a table TABLE_1 with two columns: COL_1 of type String (VARCHAR) and COL_2 of type Integer (INT). We can run queries like the following:
 
 ```java
 List<String> results =
