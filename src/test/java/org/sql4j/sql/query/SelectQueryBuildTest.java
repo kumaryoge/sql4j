@@ -22,7 +22,7 @@ public class SelectQueryBuildTest {
                     COL_1
                 FROM
                     TABLE_1
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(COL_1)
@@ -40,7 +40,7 @@ public class SelectQueryBuildTest {
                     COL_2
                 FROM
                     TABLE_1
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2)
@@ -61,7 +61,7 @@ public class SelectQueryBuildTest {
                 FROM
                     TABLE_1,
                     TABLE_2
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
@@ -78,7 +78,7 @@ public class SelectQueryBuildTest {
                     *
                 FROM
                     TABLE_1
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(ALL)
@@ -95,7 +95,7 @@ public class SelectQueryBuildTest {
                     COUNT(*)
                 FROM
                     TABLE_1
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(ALL.count())
@@ -112,7 +112,7 @@ public class SelectQueryBuildTest {
                     COUNT(COL_1)
                 FROM
                     TABLE_1
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(COL_1.count())
@@ -129,7 +129,7 @@ public class SelectQueryBuildTest {
                     DISTINCT COL_1
                 FROM
                     TABLE_1
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(COL_1.distinct())
@@ -146,7 +146,7 @@ public class SelectQueryBuildTest {
                     DISTINCT COL_2
                 FROM
                     TABLE_1
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(COL_2.distinct())
@@ -163,7 +163,7 @@ public class SelectQueryBuildTest {
                     COUNT(DISTINCT COL_2)
                 FROM
                     TABLE_1
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(COL_2.countDistinct())
@@ -186,7 +186,7 @@ public class SelectQueryBuildTest {
                     TABLE_2
                 WHERE
                     COL_1 = ?
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
@@ -215,7 +215,7 @@ public class SelectQueryBuildTest {
                     AND COL_2 = ?
                      OR COL_3 = ?
                      OR COL_4 = ?
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
@@ -249,7 +249,7 @@ public class SelectQueryBuildTest {
                      OR COL_4 = ?
                 GROUP BY
                     COL_1
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
@@ -285,7 +285,7 @@ public class SelectQueryBuildTest {
                 GROUP BY
                     COL_1,
                     COL_2
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
@@ -320,7 +320,7 @@ public class SelectQueryBuildTest {
                      OR COL_4 = ?
                 ORDER BY
                     COL_1
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
@@ -358,7 +358,7 @@ public class SelectQueryBuildTest {
                     COL_2,
                     COL_3 ASC,
                     COL_4 DESC
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
@@ -411,7 +411,7 @@ public class SelectQueryBuildTest {
                     COL_2,
                     COL_3 ASC,
                     COL_4 DESC
-                ;""";
+                """;
 
         ExecutableSelectQuery query =
                 SqlQuery.select(C_1, COL_2, COL_3, COL_4)

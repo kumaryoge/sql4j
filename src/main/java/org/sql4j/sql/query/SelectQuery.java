@@ -108,7 +108,7 @@ public class SelectQuery {
         }
 
         String sql() {
-            return context.sqlBuilder.toString() + ";";
+            return context.sqlBuilder.toString();
         }
 
         List<Object> params() {
