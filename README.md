@@ -16,7 +16,7 @@ We can run queries like the following:
 List<String> results =
         SqlQuery.select(COL_1)
                 .from(TABLE_1)
-                .execute(connection, rs -> rs.getString(COL_1.getName()));
+                .execute(connection, resultSet -> resultSet.getString(COL_1.getName()));
 ```
 
 ```java
@@ -25,9 +25,9 @@ List<Table1Row> results =
                         .from(TABLE_1)
                         .where(COL_1.equalTo("test1")
                                 .and(COL_2.lessThan(2)))
-                        .execute(connection, rs -> Table1Row.builder()
-                                .col1(rs.getString(COL_1.getName()))
-                                .col2(rs.getInt(COL_2.getName()))
+                        .execute(connection, resultSet -> Table1Row.builder()
+                                .col1(resultSet.getString(COL_1.getName()))
+                                .col2(resultSet.getInt(COL_2.getName()))
                                 .build());
 
 @lombok.Builder
