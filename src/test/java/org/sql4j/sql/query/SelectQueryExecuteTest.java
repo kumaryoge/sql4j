@@ -9,12 +9,19 @@ import java.sql.*;
 import java.util.List;
 import java.util.Objects;
 
+import static org.sql4j.sql.query.Column.ALL;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.sql4j.sql.query.Column.*;
-import static org.sql4j.sql.query.Table.TABLE_1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SelectQueryExecuteTest {
+    private static final Table TABLE_1 = Table.forName("TABLE_1");
+    private static final Column<String> COL_1 = Column.forName("COL_1");
+    private static final Column<Integer> COL_2 = Column.forName("COL_2");
+    private static final Column<Double> COL_3 = Column.forName("COL_3");
+    private static final Column<Date> COL_4 = Column.forName("COL_4");
+    private static final Column<Time> COL_5 = Column.forName("COL_5");
+    private static final Column<Timestamp> COL_6 = Column.forName("COL_6");
+
     private static final List<Table1Row> RECORDS = List.of(
             Table1Row.builder().col1("test1").col2(10).build(),
             Table1Row.builder().col1("test2").col2(10).col3(1.3).build(),

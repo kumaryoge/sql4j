@@ -5,9 +5,6 @@ import lombok.NonNull;
 
 @Getter
 public class Table {
-    public static final Table TABLE_1 = new Table("TABLE_1");
-    public static final Table TABLE_2 = new Table("TABLE_2");
-
     @NonNull
     private final String name;
     private final String alias;
@@ -19,6 +16,10 @@ public class Table {
     private Table(@NonNull String name, String alias) {
         this.name = name;
         this.alias = alias;
+    }
+
+    public static Table forName(@NonNull String name) {
+        return new Table(name);
     }
 
     public Table as(String alias) {

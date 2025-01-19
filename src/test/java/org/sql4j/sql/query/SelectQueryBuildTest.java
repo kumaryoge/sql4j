@@ -5,12 +5,17 @@ import org.sql4j.sql.query.SelectQuery.ExecutableSelectQuery;
 
 import java.sql.Date;
 
-import static org.sql4j.sql.query.Column.*;
-import static org.sql4j.sql.query.Table.TABLE_1;
-import static org.sql4j.sql.query.Table.TABLE_2;
+import static org.sql4j.sql.query.Column.ALL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SelectQueryBuildTest {
+    private static final Table TABLE_1 = Table.forName("TABLE_1");
+    private static final Table TABLE_2 = Table.forName("TABLE_2");
+    private static final Column<String> COL_1 = Column.forName("COL_1");
+    private static final Column<Integer> COL_2 = Column.forName("COL_2");
+    private static final Column<Double> COL_3 = Column.forName("COL_3");
+    private static final Column<Date> COL_4 = Column.forName("COL_4");
+
     private static final Table T_1 = TABLE_1.as("T_1");
     private static final Table T_2 = TABLE_2.as("T_2");
     private static final Column<String> C_1 = COL_1.of(T_1).as("C_1");
