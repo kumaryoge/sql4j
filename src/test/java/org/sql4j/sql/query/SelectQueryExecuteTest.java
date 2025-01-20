@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -390,6 +391,51 @@ public class SelectQueryExecuteTest {
                         .execute(CON, rs -> rs.getInt(ALL.count().getName()));
         assertEquals(1, results.size());
         assertEquals(RECORDS.size(), results.getFirst());
+    }
+
+    @Test
+    void testSelectQuery_allColumns_singleTable_count_condition_isNull() throws SQLException {
+        List<Integer> results =
+                SqlQuery.select(ALL.count())
+                        .from(TABLE_1)
+                        .where(COL_3.isNull())
+                        .execute(CON, rs -> rs.getInt(ALL.count().getName()));
+        assertEquals(1, results.size());
+        assertEquals(RECORDS.stream().filter(record -> record.col3 == null).count(), results.getFirst().intValue());
+    }
+
+    @Test
+    void testSelectQuery_allColumns_singleTable_count_condition_isNotNull() throws SQLException {
+        List<Integer> results =
+                SqlQuery.select(ALL.count())
+                        .from(TABLE_1)
+                        .where(COL_3.isNotNull())
+                        .execute(CON, rs -> rs.getInt(ALL.count().getName()));
+        assertEquals(1, results.size());
+        assertEquals(RECORDS.stream().filter(record -> record.col3 != null).count(), results.getFirst().intValue());
+    }
+
+    @Test
+    void testSelectQuery_allColumns_singleTable_count_condition_in() throws SQLException {
+        List<Integer> results =
+                SqlQuery.select(ALL.count())
+                        .from(TABLE_1)
+                        .where(COL_3.in(1.4, 1.5, 1.6))
+                        .execute(CON, rs -> rs.getInt(ALL.count().getName()));
+        assertEquals(1, results.size());
+        assertEquals(RECORDS.stream().filter(record -> Arrays.asList(1.4, 1.5, 1.6).contains(record.col3)).count(), results.getFirst().intValue());
+    }
+
+    @Test
+    void testSelectQuery_allColumns_singleTable_count_condition_notIn() throws SQLException {
+        List<Integer> results =
+                SqlQuery.select(ALL.count())
+                        .from(TABLE_1)
+                        .where(COL_3.isNull()
+                                .or(COL_3.notIn(1.4, 1.5, 1.6)))
+                        .execute(CON, rs -> rs.getInt(ALL.count().getName()));
+        assertEquals(1, results.size());
+        assertEquals(RECORDS.stream().filter(record -> !Arrays.asList(1.4, 1.5, 1.6).contains(record.col3)).count(), results.getFirst().intValue());
     }
 
     @Test

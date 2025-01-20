@@ -5,7 +5,6 @@ import lombok.NonNull;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -109,12 +108,12 @@ public class Column<T> {
     }
 
     public Filter in(@NonNull T value, @NonNull T... values) {
-        Arrays.stream(values).forEach(Objects::requireNonNull);
+        Utils.requireNonNulls(values);
         return new Filter(name + " IN (?" + ", ?".repeat(values.length) + ")", (List<Object>) Stream.concat(Stream.of(value), Arrays.stream(values)).toList());
     }
 
     public Filter notIn(@NonNull T value, @NonNull T... values) {
-        Arrays.stream(values).forEach(Objects::requireNonNull);
+        Utils.requireNonNulls(values);
         return new Filter(name + " NOT IN (?" + ", ?".repeat(values.length) + ")", (List<Object>) Stream.concat(Stream.of(value), Arrays.stream(values)).toList());
     }
 

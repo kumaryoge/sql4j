@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 @Getter
@@ -15,7 +14,7 @@ public class Filter {
     private final List<Object> params;
 
     Filter(@NonNull String condition, @NonNull List<Object> params) {
-        params.forEach(Objects::requireNonNull);
+        Utils.requireNonNulls(params);
         this.condition = condition;
         this.params = params;
     }

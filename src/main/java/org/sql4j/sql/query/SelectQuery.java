@@ -11,7 +11,7 @@ public class SelectQuery {
     private final Context context = new Context();
 
     SelectQuery(@NonNull Column<?> column, @NonNull Column<?>[] columns) {
-        Arrays.stream(columns).forEach(Objects::requireNonNull);
+        Utils.requireNonNulls(columns);
         context.sqlBuilder.append("SELECT\n    ")
                 .append(Stream.concat(Stream.of(column), Arrays.stream(columns))
                         .map(c -> c.getName() + Optional.ofNullable(c.getAlias()).map(alias -> " AS " + alias).orElse(""))
@@ -20,7 +20,7 @@ public class SelectQuery {
     }
 
     public ConditionableSelectQuery from(@NonNull Table table, @NonNull Table... tables) {
-        Arrays.stream(tables).forEach(Objects::requireNonNull);
+        Utils.requireNonNulls(tables);
         context.sqlBuilder.append("FROM\n    ")
                 .append(Stream.concat(Stream.of(table), Arrays.stream(tables))
                         .map(t -> t.getName() + Optional.ofNullable(t.getAlias()).map(alias -> " AS " + alias).orElse(""))
@@ -56,7 +56,7 @@ public class SelectQuery {
         }
 
         public OrderableSelectQuery groupBy(@NonNull Column<?> column, @NonNull Column<?>... columns) {
-            Arrays.stream(columns).forEach(Objects::requireNonNull);
+            Utils.requireNonNulls(columns);
             context.sqlBuilder.append("GROUP BY\n    ")
                     .append(Stream.concat(Stream.of(column), Arrays.stream(columns))
                             .map(Column::getName)
@@ -73,7 +73,7 @@ public class SelectQuery {
         }
 
         public ExecutableSelectQuery orderBy(@NonNull Column<?> column, @NonNull Column<?>... columns) {
-            Arrays.stream(columns).forEach(Objects::requireNonNull);
+            Utils.requireNonNulls(columns);
             context.sqlBuilder.append("ORDER BY\n    ")
                     .append(Stream.concat(Stream.of(column), Arrays.stream(columns))
                             .map(c -> c.getName() + (c.getOrder() != null ? (" " + c.getOrder()) : ""))
