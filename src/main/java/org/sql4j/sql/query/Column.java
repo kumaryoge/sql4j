@@ -101,6 +101,10 @@ public class Column<T> {
         return new Column<>("COUNT(DISTINCT " + name + ")", sqlType, alias, order);
     }
 
+    public ColumnValue value(T value) {
+        return new ColumnValue(name, sqlType, value);
+    }
+
     public Filter equalTo(@NonNull T value) {
         return new Filter(name + " = ?", List.of(value));
     }

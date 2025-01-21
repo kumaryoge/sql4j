@@ -37,5 +37,7 @@ private record Table1Row(String col1, int col2) {}
 Where `connection` is a `java.sql.Connection` object that is created via `java.sql.DriverManager.getConnection(<database url>, <database user>, <user's password>)`.
 
 Checkout more examples in
-* [SelectQueryBuildTest.java](src/test/java/org/sql4j/sql/query/SelectQueryBuildTest.java)
-* [SelectQueryExecuteTest.java](src/test/java/org/sql4j/sql/query/SelectQueryExecuteTest.java)
+* [SelectQueryExecuteTest.java](src/test/java/org/sql4j/sql/query/integ/SelectQueryExecuteTest.java)
+* [DeleteQueryExecuteTest.java](src/test/java/org/sql4j/sql/query/integ/DeleteQueryExecuteTest.java)
+* [InsertQueryExecuteTest.java](src/test/java/org/sql4j/sql/query/integ/InsertQueryExecuteTest.java)
+* [UpdateQueryExecuteTest.java](src/test/java/org/sql4j/sql/query/integ/UpdateQueryExecuteTest.java)
