@@ -446,4 +446,37 @@ public class SelectQueryBuildTest {
         assertEquals(expectedSql, query.sql());
         assertEquals(22, query.params().size());
     }
+
+    @Test
+    void testSelectQuery_compositeConditions() {
+        Date currentDate = new Date(System.currentTimeMillis());
+
+        String expectedSql = """
+                SELECT
+                    COL_1,
+                    COL_2,
+                    COL_3,
+                    COL_4
+                FROM
+                    TABLE_1,
+                    TABLE_2
+                WHERE
+                    NOT COL_1 = ?
+                    AND (NOT COL_2 = ?
+                     OR NOT (NOT COL_3 = ?
+                     OR NOT COL_4 = ?))
+                """;
+
+        ExecutableSelectQuery query =
+                SqlQuery.select(COL_1, COL_2, COL_3, COL_4)
+                        .from(TABLE_1, TABLE_2)
+                        .where(COL_1.equalTo("test").negate()
+                                .and(COL_2.equalTo(1).negate()
+                                        .or(COL_3.equalTo(2.0).negate()
+                                                .or(COL_4.equalTo(currentDate).negate())
+                                                .negate())));
+
+        assertEquals(expectedSql, query.sql());
+        assertEquals(4, query.params().size());
+    }
 }
