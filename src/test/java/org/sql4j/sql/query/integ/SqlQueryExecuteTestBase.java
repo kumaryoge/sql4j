@@ -31,8 +31,16 @@ public abstract class SqlQueryExecuteTestBase {
 
     @BeforeAll
     public static void setUp() throws ClassNotFoundException, SQLException {
-        connectToH2Database();
-        connectToMySqlDatabase();
+        connectToDatabase("H2",
+                "org.h2.Driver",
+                "jdbc:h2:mem:testdb",
+                "sa",
+                "");
+        connectToDatabase("MySql",
+                "com.mysql.cj.jdbc.Driver",
+                "jdbc:mysql://localhost:3306/testdb",
+                System.getenv("DB_USER"),
+                System.getenv("DB_PASS"));
 
         for (Connection connection : CONNECTIONS) {
             System.out.println("\nSetUp using connection: " + connection);
@@ -67,33 +75,13 @@ public abstract class SqlQueryExecuteTestBase {
         CONNECTIONS.clear();
     }
 
-    private static void connectToH2Database() throws ClassNotFoundException {
-        // Load the H2 driver
-        Class.forName("org.h2.Driver");
+    private static void connectToDatabase(String dbName, String dbDriverClassName, String dbUrl, String dbUser, String userPassword) throws ClassNotFoundException {
+        // Load the database driver
+        Class.forName(dbDriverClassName);
 
-        // Connect to the in-memory database
-        String url = "jdbc:h2:mem:testdb"; // testdb is the database name
-        String user = "sa";
-        String password = "";
         try {
-            CONNECTIONS.add(DriverManager.getConnection(url, user, password));
-            System.out.println("Connected to H2 database!");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void connectToMySqlDatabase() throws ClassNotFoundException {
-        // Load the mysql driver
-        Class.forName("com.mysql.cj.jdbc.Driver");
-
-        // Connect to the mysql database
-        String url = "jdbc:mysql://localhost:3306/testdb"; // testdb is the database name
-        String user = System.getenv("DB_USER");
-        String password = System.getenv("DB_PASS");
-        try {
-            CONNECTIONS.add(DriverManager.getConnection(url, user, password));
-            System.out.println("Connected to MySql database!");
+            CONNECTIONS.add(DriverManager.getConnection(dbUrl, dbUser, userPassword));
+            System.out.printf("Connected to %s database!%n", dbName);
         } catch (SQLException e) {
             e.printStackTrace();
         }
