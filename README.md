@@ -21,17 +21,41 @@ List<String> results =
 
 ```java
 List<Table1Row> results =
-                SqlQuery.select(COL_1, COL_2)
-                        .from(TABLE_1)
-                        .where(COL_1.equalTo("test1")
-                                .and(COL_2.lessThan(2)))
-                        .execute(connection, resultSet -> Table1Row.builder()
-                                .col1(resultSet.getString(COL_1.getName()))
-                                .col2(resultSet.getInt(COL_2.getName()))
-                                .build());
+        SqlQuery.select(COL_1, COL_2)
+                .from(TABLE_1)
+                .where(COL_1.equalTo("test1")
+                        .and(COL_2.lessThan(2)))
+                .execute(connection, resultSet -> Table1Row.builder()
+                        .col1(resultSet.getString(COL_1.getName()))
+                        .col2(resultSet.getInt(COL_2.getName()))
+                        .build());
 
 @lombok.Builder
 private record Table1Row(String col1, int col2) {}
+```
+
+```java
+int numberOfDeletedRows =
+        SqlQuery.delete()
+                .from(TABLE_1)
+                .where(COL_1.equalTo("test1"))
+                .execute(connection);
+```
+
+```java
+int numberOfInsertedRows =
+        SqlQuery.insert()
+                .into(TABLE_1)
+                .values(COL_1.value("test1"), COL_2.value(1))
+                .execute(connection);
+```
+
+```java
+int numberOfUpdatedRows =
+        SqlQuery.update(TABLE_1)
+                .set(COL_2.value(2))
+                .where(COL_1.equalTo("test1"))
+                .execute(connection);
 ```
 
 Where `connection` is a `java.sql.Connection` object that is created via `java.sql.DriverManager.getConnection(<database url>, <database user>, <user's password>)`.
