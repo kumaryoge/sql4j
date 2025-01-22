@@ -30,14 +30,12 @@ public abstract class SqlQueryExecuteTestBase {
     protected static final List<Connection> CONNECTIONS = new ArrayList<>();
 
     @BeforeAll
-    public static void setUp() throws ClassNotFoundException, SQLException {
+    public static void setUp() throws SQLException {
         connectToDatabase("H2",
-                "org.h2.Driver",
                 "jdbc:h2:mem:testdb",
                 "sa",
                 "");
         connectToDatabase("MySql",
-                "com.mysql.cj.jdbc.Driver",
                 "jdbc:mysql://localhost:3306/testdb",
                 System.getenv("DB_USER"),
                 System.getenv("DB_PASS"));
@@ -75,10 +73,7 @@ public abstract class SqlQueryExecuteTestBase {
         CONNECTIONS.clear();
     }
 
-    private static void connectToDatabase(String dbName, String dbDriverClassName, String dbUrl, String dbUser, String userPassword) throws ClassNotFoundException {
-        // Load the database driver
-        Class.forName(dbDriverClassName);
-
+    private static void connectToDatabase(String dbName, String dbUrl, String dbUser, String userPassword) {
         try {
             CONNECTIONS.add(DriverManager.getConnection(dbUrl, dbUser, userPassword));
             System.out.printf("Connected to %s database!%n", dbName);
