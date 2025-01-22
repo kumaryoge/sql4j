@@ -64,9 +64,10 @@ public abstract class SqlQueryExecuteTestBase {
             // Close the connection
             connection.close();
         }
+        CONNECTIONS.clear();
     }
 
-    private static void connectToH2Database() throws ClassNotFoundException, SQLException {
+    private static void connectToH2Database() throws ClassNotFoundException {
         // Load the H2 driver
         Class.forName("org.h2.Driver");
 
@@ -74,11 +75,15 @@ public abstract class SqlQueryExecuteTestBase {
         String url = "jdbc:h2:mem:testdb"; // testdb is the database name
         String user = "sa";
         String password = "";
-        CONNECTIONS.add(DriverManager.getConnection(url, user, password));
-        System.out.println("Connected to H2 database!");
+        try {
+            CONNECTIONS.add(DriverManager.getConnection(url, user, password));
+            System.out.println("Connected to H2 database!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    private static void connectToMySqlDatabase() throws ClassNotFoundException, SQLException {
+    private static void connectToMySqlDatabase() throws ClassNotFoundException {
         // Load the mysql driver
         Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -86,8 +91,12 @@ public abstract class SqlQueryExecuteTestBase {
         String url = "jdbc:mysql://localhost:3306/testdb"; // testdb is the database name
         String user = System.getenv("DB_USER");
         String password = System.getenv("DB_PASS");
-        CONNECTIONS.add(DriverManager.getConnection(url, user, password));
-        System.out.println("Connected to MySql database!");
+        try {
+            CONNECTIONS.add(DriverManager.getConnection(url, user, password));
+            System.out.println("Connected to MySql database!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void insertRecordsInTable1(List<Table1Row> records, Connection connection) throws SQLException {
