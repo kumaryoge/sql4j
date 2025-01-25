@@ -6,14 +6,14 @@ import java.sql.SQLException;
 /**
  * Example usage:
  * <p>
- * 1. When reading a single column (with name "COL_1" and type String) from a database table:
+ * 1. When reading a single column (with name {@code COL_1} and type {@code String}) from a database table:
  * <blockquote><pre>
- *     ResultSetMapper<String> resultSetMapper = rs -> rs.getString("COL_1");
+ *     ResultSetMapper{@code <String>} resultSetMapper = rs -> rs.getString("COL_1");
  * </pre></blockquote>
  * <p>
  * 2. When reading multiple columns:
  * <blockquote><pre>
- *     ResultSetMapper<Row> resultSetMapper = rs -> Row.builder()
+ *     ResultSetMapper{@code <Row>} resultSetMapper = rs -> Row.builder()
  *                                                     .col1(rs.getString("COL_1"))
  *                                                     .col2(rs.getInt("COL_2"))
  *                                                     .col3(rs.getDouble("COL_3"))
@@ -22,20 +22,11 @@ import java.sql.SQLException;
  * </pre></blockquote>
  * Where {@code Row} is defined as:
  * <blockquote><pre>
- *     import lombok.Getter;
- *     import lombok.Builder;
- *
- *     {@code @Getter}
- *     {@code @Builder}
- *     class Row {
- *         private final String col1;
- *         private final int col2;
- *         private final double col3;
- *         private final Date col4;
- *     }
+ *     {@code @lombok.Builder}
+ *     record Row(String col1, int col2, double col3, Date col4) {}
  * </pre></blockquote>
  *
- * @param <T>
+ * @param <T> a java class type to represent a row/record in the results of a {@code SELECT} query
  */
 
 @FunctionalInterface
