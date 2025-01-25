@@ -143,6 +143,41 @@
                             </execution>
                         </executions>
                     </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>2.5.0</version>
+
+                        <configuration>
+                            <verbose>false</verbose>
+                            <includes>
+                                <includes>**/*.java</includes>
+                            </includes>
+                            <processStartTag>==============================LICENSE_START==============================</processStartTag>
+                            <processEndTag>===============================LICENSE_END===============================</processEndTag>
+                            <sectionDelimiter>--</sectionDelimiter>
+                        </configuration>
+
+                        <executions>
+                            <execution>
+                                <id>generate-license-headers</id>
+                                <goals>
+                                    <goal>update-file-header</goal>
+                                </goals>
+                                <phase>process-sources</phase>
+                                <configuration>
+                                    <licenseName>apache_v2</licenseName>
+                                    <organizationName>${project.groupId}</organizationName>
+                                    <inceptionYear>2025</inceptionYear>
+                                    <roots>
+                                        <root>src/main/java</root>
+                                        <root>src/test/java</root>
+                                    </roots>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
