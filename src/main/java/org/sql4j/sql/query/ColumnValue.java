@@ -3,6 +3,10 @@ package org.sql4j.sql.query;
 import lombok.Getter;
 import lombok.NonNull;
 
+/**
+ * Class representing a column and its value used in sql insert/update queries
+ */
+
 @Getter
 public class ColumnValue {
     @NonNull

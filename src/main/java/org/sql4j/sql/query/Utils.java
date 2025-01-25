@@ -5,7 +5,7 @@ import lombok.NonNull;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Utils {
+class Utils {
 
     static void requireNonNulls(@NonNull Object[] objects) {
         requireNonNulls(Arrays.asList(objects));

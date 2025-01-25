@@ -8,6 +8,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class used to build and execute sql {@code DELETE} queries
+ */
+
 public class DeleteQuery {
     private final Context context = new Context();
 
@@ -15,6 +19,10 @@ public class DeleteQuery {
         context.sqlBuilder.append("DELETE\n");
     }
 
+    /**
+     * @param table a table to delete rows from
+     * @return a {@link ConditionableDeleteQuery} with the given {@code table} in {@code FROM} clause e.g. {@code DELETE FROM table ...}
+     */
     public ConditionableDeleteQuery from(@NonNull Table table) {
         context.sqlBuilder.append("FROM\n    ")
                 .append(table.getName())
@@ -27,12 +35,19 @@ public class DeleteQuery {
         private final List<Object> params = new ArrayList<>();
     }
 
+    /**
+     * Class to represent a {@code DELETE} query that can be used to add {@code WHERE} clause in the query
+     */
     public static class ConditionableDeleteQuery extends ExecutableDeleteQuery {
 
         private ConditionableDeleteQuery(Context context) {
             super(context);
         }
 
+        /**
+         * @param filter a {@link Filter} that contains the condition used in {@code WHERE} clause
+         * @return an {@link ExecutableDeleteQuery} that is ready for execution
+         */
         public ExecutableDeleteQuery where(@NonNull Filter filter) {
             context.sqlBuilder.append("WHERE\n    ")
                     .append(filter.getCondition())
@@ -42,6 +57,9 @@ public class DeleteQuery {
         }
     }
 
+    /**
+     * Class to represent a {@code DELETE} query that is ready for execution
+     */
     public static class ExecutableDeleteQuery {
         protected final Context context;
 
@@ -49,6 +67,11 @@ public class DeleteQuery {
             this.context = context;
         }
 
+        /**
+         * @param con a {@link java.sql.Connection} object that can be created via {@link java.sql.DriverManager#getConnection(String, String, String)}
+         * @return number of deleted rows in the table
+         * @throws SQLException if a database access error occurs
+         */
         public int execute(Connection con) throws SQLException {
             try (PreparedStatement stmt = con.prepareStatement(sql())) {
                 for (int i = 0; i < context.params.size(); ++i) {
@@ -59,11 +82,17 @@ public class DeleteQuery {
             }
         }
 
-        String sql() {
+        /**
+         * @return the sql statement used to execute the sql query, callers may want to log it for debugging/information
+         */
+        public String sql() {
             return context.sqlBuilder.toString();
         }
 
-        List<Object> params() {
+        /**
+         * @return the values of parameters used in sql statement, callers may want to log it for debugging/information
+         */
+        public List<Object> params() {
             return context.params;
         }
     }

@@ -7,6 +7,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Class used to build and execute sql {@code SELECT} queries
+ */
+
 public class SelectQuery {
     private final Context context = new Context();
 
@@ -19,6 +23,11 @@ public class SelectQuery {
                 .append("\n");
     }
 
+    /**
+     * @param table a table to select columns from
+     * @param tables other tables to select columns from
+     * @return a {@link ConditionableSelectQuery} with the given tables in {@code FROM} clause e.g. {@code SELECT * FROM table, <tables separated by comma> ...}
+     */
     public ConditionableSelectQuery from(@NonNull Table table, @NonNull Table... tables) {
         Utils.requireNonNulls(tables);
         context.sqlBuilder.append("FROM\n    ")
@@ -34,12 +43,19 @@ public class SelectQuery {
         private final List<Object> params = new ArrayList<>();
     }
 
+    /**
+     * Class to represent a {@code SELECT} query that can be used to add {@code WHERE} clause in the query
+     */
     public static class ConditionableSelectQuery extends GroupableSelectQuery {
 
         private ConditionableSelectQuery(Context context) {
             super(context);
         }
 
+        /**
+         * @param filter a {@link Filter} that contains the condition used in {@code WHERE} clause
+         * @return a {@link GroupableSelectQuery} that can be used to add {@code GROUP BY} clause in the query
+         */
         public GroupableSelectQuery where(@NonNull Filter filter) {
             context.sqlBuilder.append("WHERE\n    ")
                     .append(filter.getCondition())
@@ -49,12 +65,20 @@ public class SelectQuery {
         }
     }
 
+    /**
+     * Class to represent a {@code SELECT} query that can be used to add {@code GROUP BY} clause in the query
+     */
     public static class GroupableSelectQuery extends OrderableSelectQuery {
 
         private GroupableSelectQuery(Context context) {
             super(context);
         }
 
+        /**
+         * @param column a column for grouping the results
+         * @param columns other columns for grouping the results
+         * @return an {@link OrderableSelectQuery} that can be used to add {@code ORDER BY} clause in the query
+         */
         public OrderableSelectQuery groupBy(@NonNull Column<?> column, @NonNull Column<?>... columns) {
             Utils.requireNonNulls(columns);
             context.sqlBuilder.append("GROUP BY\n    ")
@@ -66,12 +90,20 @@ public class SelectQuery {
         }
     }
 
+    /**
+     * Class to represent a {@code SELECT} query that can be used to add {@code ORDER BY} clause in the query
+     */
     public static class OrderableSelectQuery extends ExecutableSelectQuery {
 
         private OrderableSelectQuery(Context context) {
             super(context);
         }
 
+        /**
+         * @param column a column for ordering the results
+         * @param columns other columns for ordering the results
+         * @return an {@link ExecutableSelectQuery} that is ready for execution
+         */
         public ExecutableSelectQuery orderBy(@NonNull Column<?> column, @NonNull Column<?>... columns) {
             Utils.requireNonNulls(columns);
             context.sqlBuilder.append("ORDER BY\n    ")
@@ -83,6 +115,9 @@ public class SelectQuery {
         }
     }
 
+    /**
+     * Class to represent a {@code SELECT} query that is ready for execution
+     */
     public static class ExecutableSelectQuery {
         protected final Context context;
 
@@ -90,6 +125,13 @@ public class SelectQuery {
             this.context = context;
         }
 
+        /**
+         * @param con a {@link java.sql.Connection} object that can be created via {@link java.sql.DriverManager#getConnection(String, String, String)}
+         * @param resultSetMapper a {@link ResultSetMapper} to map a {@link java.sql.ResultSet} to an object of type {@code <T>}
+         * @param <T> a java class type to represent a row/record in the results of the {@code SELECT} query
+         * @return a list of objects of type {@code <T>} representing the results of the {@code SELECT} query
+         * @throws SQLException if a database access error occurs
+         */
         public <T> List<T> execute(Connection con, ResultSetMapper<T> resultSetMapper) throws SQLException {
             List<T> results = new ArrayList<>();
 
@@ -107,11 +149,17 @@ public class SelectQuery {
             return results;
         }
 
-        String sql() {
+        /**
+         * @return the sql statement used to execute the sql query, callers may want to log it for debugging/information
+         */
+        public String sql() {
             return context.sqlBuilder.toString();
         }
 
-        List<Object> params() {
+        /**
+         * @return the values of parameters used in sql statement, callers may want to log it for debugging/information
+         */
+        public List<Object> params() {
             return context.params;
         }
     }

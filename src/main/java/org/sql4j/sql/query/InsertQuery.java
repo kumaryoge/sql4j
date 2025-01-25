@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Class used to build and execute sql {@code INSERT} queries
+ */
+
 public class InsertQuery {
     private final Context context = new Context();
 
@@ -18,6 +22,10 @@ public class InsertQuery {
         context.sqlBuilder.append("INSERT\n");
     }
 
+    /**
+     * @param table a table to insert rows into
+     * @return a {@link ValuableInsertQuery} with the given {@code table} in {@code INTO} clause e.g. {@code INSERT INTO table ...}
+     */
     public ValuableInsertQuery into(@NonNull Table table) {
         context.sqlBuilder.append("INTO\n    ")
                 .append(table.getName())
@@ -30,6 +38,9 @@ public class InsertQuery {
         private final List<ColumnValue> valueParams = new ArrayList<>();
     }
 
+    /**
+     * Class to represent an {@code INSERT} query that can be used to add {@code VALUES} clause in the query
+     */
     public static class ValuableInsertQuery {
         private final Context context;
 
@@ -37,6 +48,11 @@ public class InsertQuery {
             this.context = context;
         }
 
+        /**
+         * @param colValue a {@link ColumnValue} to be inserted
+         * @param colValues other {@link ColumnValue}s to be inserted
+         * @return an {@link ExecutableInsertQuery} that is ready for execution
+         */
         public ExecutableInsertQuery values(@NonNull ColumnValue colValue, @NonNull ColumnValue... colValues) {
             Utils.requireNonNulls(colValues);
             context.sqlBuilder.append("(")
@@ -52,6 +68,9 @@ public class InsertQuery {
         }
     }
 
+    /**
+     * Class to represent an {@code INSERT} query that is ready for execution
+     */
     public static class ExecutableInsertQuery {
         protected final Context context;
 
@@ -59,6 +78,11 @@ public class InsertQuery {
             this.context = context;
         }
 
+        /**
+         * @param con a {@link java.sql.Connection} object that can be created via {@link java.sql.DriverManager#getConnection(String, String, String)}
+         * @return number of inserted rows in the table
+         * @throws SQLException if a database access error occurs
+         */
         public int execute(Connection con) throws SQLException {
             try (PreparedStatement stmt = con.prepareStatement(sql())) {
                 for (int i = 0; i < context.valueParams.size(); ++i) {
@@ -75,11 +99,17 @@ public class InsertQuery {
             }
         }
 
-        String sql() {
+        /**
+         * @return the sql statement used to execute the sql query, callers may want to log it for debugging/information
+         */
+        public String sql() {
             return context.sqlBuilder.toString();
         }
 
-        List<Object> params() {
+        /**
+         * @return the values of parameters used in sql statement, callers may want to log it for debugging/information
+         */
+        public List<Object> params() {
             return context.valueParams.stream().map(ColumnValue::getValue).toList();
         }
     }

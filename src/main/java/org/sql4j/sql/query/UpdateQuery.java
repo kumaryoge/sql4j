@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Class used to build and execute sql {@code UPDATE} queries
+ */
+
 public class UpdateQuery {
     private final Context context = new Context();
 
@@ -20,6 +24,11 @@ public class UpdateQuery {
                 .append("\n");
     }
 
+    /**
+     * @param colValue a {@link ColumnValue} to be set
+     * @param colValues other {@link ColumnValue}s to be set
+     * @return a {@link ConditionableUpdateQuery} with the given column values in {@code SET} clause
+     */
     public ConditionableUpdateQuery set(@NonNull ColumnValue colValue, @NonNull ColumnValue... colValues) {
         Utils.requireNonNulls(colValues);
         context.sqlBuilder.append("SET\n    ")
@@ -37,12 +46,19 @@ public class UpdateQuery {
         private final List<Object> filterParams = new ArrayList<>();
     }
 
+    /**
+     * Class to represent an {@code UPDATE} query that can be used to add {@code WHERE} clause in the query
+     */
     public static class ConditionableUpdateQuery extends ExecutableUpdateQuery {
 
         private ConditionableUpdateQuery(Context context) {
             super(context);
         }
 
+        /**
+         * @param filter a {@link Filter} that contains the condition used in {@code WHERE} clause
+         * @return an {@link ExecutableUpdateQuery} that is ready for execution
+         */
         public ExecutableUpdateQuery where(@NonNull Filter filter) {
             context.sqlBuilder.append("WHERE\n    ")
                     .append(filter.getCondition())
@@ -52,6 +68,9 @@ public class UpdateQuery {
         }
     }
 
+    /**
+     * Class to represent an {@code UPDATE} query that is ready for execution
+     */
     public static class ExecutableUpdateQuery {
         protected final Context context;
 
@@ -59,6 +78,11 @@ public class UpdateQuery {
             this.context = context;
         }
 
+        /**
+         * @param con a {@link java.sql.Connection} object that can be created via {@link java.sql.DriverManager#getConnection(String, String, String)}
+         * @return number of updated rows in the table
+         * @throws SQLException if a database access error occurs
+         */
         public int execute(Connection con) throws SQLException {
             try (PreparedStatement stmt = con.prepareStatement(sql())) {
                 for (int i = 0; i < context.setParams.size(); ++i) {
@@ -79,11 +103,17 @@ public class UpdateQuery {
             }
         }
 
-        String sql() {
+        /**
+         * @return the sql statement used to execute the sql query, callers may want to log it for debugging/information
+         */
+        public String sql() {
             return context.sqlBuilder.toString();
         }
 
-        List<Object> params() {
+        /**
+         * @return the values of parameters used in sql statement, callers may want to log it for debugging/information
+         */
+        public List<Object> params() {
             return Stream.concat(context.setParams.stream().map(ColumnValue::getValue), context.filterParams.stream()).toList();
         }
     }
