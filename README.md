@@ -1,7 +1,7 @@
 # Sql4j
 This is a simple java library to simplify building and executing sql queries in java, without actually hard-coding any sql query in java code.
 
-This library is published to Maven Central Repository (https://central.sonatype.com/artifact/io.github.kumaryoge/sql4j) where you can find Snippets for adding a dependency on this library in Maven, Gradle and other types of projects.
+This library is published to [Maven Central Repository](https://central.sonatype.com/artifact/io.github.kumaryoge/sql4j) where you can find Snippets for adding a dependency on this library in Maven, Gradle and other types of projects.
 For example:
 
 * In Maven projects, add this dependency in `pom.xml` file
