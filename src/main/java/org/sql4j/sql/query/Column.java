@@ -102,7 +102,7 @@ public class Column<T> {
      * @return a copy of the caller Column object with the given {@code alias}
      */
     public Column<T> as(String alias) {
-        return new Column<>(name, sqlType, alias, order);
+        return new Column<>(name, sqlType, Utils.enquoteAliasWithSpaces(alias), order);
     }
 
     /**
@@ -127,6 +127,34 @@ public class Column<T> {
      */
     public Column<T> of(@NonNull Table table) {
         return new Column<>(Optional.ofNullable(table.getAlias()).orElse(table.getName()) + "." + name, sqlType, alias, order);
+    }
+
+    /**
+     * @return a copy of the caller Column object with a new name {@code MIN(<column name>)} used to return minimum value of this column
+     */
+    public Column<T> min() {
+        return new Column<>("MIN(" + name + ")", sqlType, alias, order);
+    }
+
+    /**
+     * @return a copy of the caller Column object with a new name {@code MAX(<column name>)} used to return maximum value of this column
+     */
+    public Column<T> max() {
+        return new Column<>("MAX(" + name + ")", sqlType, alias, order);
+    }
+
+    /**
+     * @return a copy of the caller Column object with a new name {@code SUM(<column name>)} used to return sum of all values of this column
+     */
+    public Column<T> sum() {
+        return new Column<>("SUM(" + name + ")", sqlType, alias, order);
+    }
+
+    /**
+     * @return a copy of the caller Column object with a new name {@code AVG(<column name>)} used to return average of all values of this column
+     */
+    public Column<T> avg() {
+        return new Column<>("AVG(" + name + ")", sqlType, alias, order);
     }
 
     /**

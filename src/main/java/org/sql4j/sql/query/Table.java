@@ -55,6 +55,6 @@ public class Table {
      * @return a copy of the caller Table object with the given {@code alias}
      */
     public Table as(String alias) {
-        return new Table(name, alias);
+        return new Table(name, Utils.enquoteAliasWithSpaces(alias));
     }
 }

@@ -24,6 +24,7 @@ import lombok.NonNull;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 
 class Utils {
 
@@ -33,5 +34,12 @@ class Utils {
 
     static void requireNonNulls(@NonNull Iterable<Object> objects) {
         objects.forEach(obj -> Objects.requireNonNull(obj, "null value is provided where non-null is required"));
+    }
+
+    static String enquoteAliasWithSpaces(String alias) {
+        return Optional.ofNullable(alias)
+                .filter(a -> !a.isEmpty())
+                .map(a -> a.contains(" ") ? ("\"" + a + "\"") : a)
+                .orElse(null);
     }
 }

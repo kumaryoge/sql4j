@@ -114,6 +114,74 @@ public class SelectQueryBuildTest {
     }
 
     @Test
+    void testSelectQuery_singleColumn_singleTable_min() {
+        String expectedSql = """
+                SELECT
+                    MIN(COL_1)
+                FROM
+                    TABLE_1
+                """;
+
+        ExecutableSelectQuery query =
+                SqlQuery.select(COL_1.min())
+                        .from(TABLE_1);
+
+        assertEquals(expectedSql, query.sql());
+        assertEquals(0, query.params().size());
+    }
+
+    @Test
+    void testSelectQuery_singleColumn_singleTable_max() {
+        String expectedSql = """
+                SELECT
+                    MAX(COL_1)
+                FROM
+                    TABLE_1
+                """;
+
+        ExecutableSelectQuery query =
+                SqlQuery.select(COL_1.max())
+                        .from(TABLE_1);
+
+        assertEquals(expectedSql, query.sql());
+        assertEquals(0, query.params().size());
+    }
+
+    @Test
+    void testSelectQuery_singleColumn_singleTable_sum() {
+        String expectedSql = """
+                SELECT
+                    SUM(COL_1)
+                FROM
+                    TABLE_1
+                """;
+
+        ExecutableSelectQuery query =
+                SqlQuery.select(COL_1.sum())
+                        .from(TABLE_1);
+
+        assertEquals(expectedSql, query.sql());
+        assertEquals(0, query.params().size());
+    }
+
+    @Test
+    void testSelectQuery_singleColumn_singleTable_avg() {
+        String expectedSql = """
+                SELECT
+                    AVG(COL_1)
+                FROM
+                    TABLE_1
+                """;
+
+        ExecutableSelectQuery query =
+                SqlQuery.select(COL_1.avg())
+                        .from(TABLE_1);
+
+        assertEquals(expectedSql, query.sql());
+        assertEquals(0, query.params().size());
+    }
+
+    @Test
     void testSelectQuery_allColumns_singleTable_count() {
         String expectedSql = """
                 SELECT
@@ -465,6 +533,48 @@ public class SelectQueryBuildTest {
 
         assertEquals(expectedSql, query.sql());
         assertEquals(22, query.params().size());
+    }
+
+    @Test
+    void testSelectQuery_aliasesWithSpaces() {
+        String expectedSql = """
+                SELECT
+                    COL_1,
+                    COL_2 AS C_2,
+                    COL_3 AS "C 3",
+                    COL_4 AS "C  4"
+                FROM
+                    TABLE_1 AS T_1,
+                    TABLE_2 AS "T 2"
+                """;
+
+        ExecutableSelectQuery query =
+                SqlQuery.select(COL_1, COL_2.as("C_2"), COL_3.as("C 3"), COL_4.as("C  4"))
+                        .from(TABLE_1.as("T_1"), TABLE_2.as("T 2"));
+
+        assertEquals(expectedSql, query.sql());
+        assertEquals(0, query.params().size());
+    }
+
+    @Test
+    void testSelectQuery_nullOrEmptyAliases() {
+        String expectedSql = """
+                SELECT
+                    COL_1,
+                    COL_2 AS C_2,
+                    COL_3,
+                    COL_4
+                FROM
+                    TABLE_1,
+                    TABLE_2
+                """;
+
+        ExecutableSelectQuery query =
+                SqlQuery.select(COL_1, COL_2.as("C_2"), COL_3.as(null), COL_4.as(""))
+                        .from(TABLE_1.as(null), TABLE_2.as(""));
+
+        assertEquals(expectedSql, query.sql());
+        assertEquals(0, query.params().size());
     }
 
     @Test
