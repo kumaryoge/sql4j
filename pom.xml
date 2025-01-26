@@ -4,7 +4,7 @@
 
     <groupId>io.github.kumaryoge</groupId>
     <artifactId>sql4j</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -29,7 +29,7 @@
         <!-- developerConnection is used by e.g. maven-release-plugin to push changes to the repo. -->
         <developerConnection>scm:git:https://github.com/kumaryoge/sql4j.git</developerConnection>
         <url>https://github.com/kumaryoge/sql4j</url>
-      <tag>HEAD</tag>
+      <tag>sql4j-1.0.1</tag>
   </scm>
 
     <properties>
