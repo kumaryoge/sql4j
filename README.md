@@ -30,9 +30,9 @@ implementation("io.github.kumaryoge:sql4j:1.0.1")
 Suppose, in a database, we have a table TABLE_1 with two columns: COL_1 of type String (VARCHAR) and COL_2 of type Integer (INT).
 
 ```java
-private static final Table TABLE_1 = Table.forName("TABLE_1");
-private static final Column<String> COL_1 = Column.forName("COL_1");
-private static final Column<Integer> COL_2 = Column.forName("COL_2");
+static final Table TABLE_1 = Table.forName("TABLE_1");
+static final Column<String> COL_1 = Column.forName("COL_1");
+static final Column<Integer> COL_2 = Column.forName("COL_2");
 ```
 
 We can run queries like the following:
@@ -45,18 +45,16 @@ List<String> results =
 ```
 
 ```java
-List<Table1Row> results =
+List<Row> results =
         SqlQuery.select(COL_1, COL_2)
                 .from(TABLE_1)
                 .where(COL_1.equalTo("test1")
                         .and(COL_2.lessThan(2)))
-                .execute(connection, resultSet -> Table1Row.builder()
-                        .col1(resultSet.getString(COL_1.getName()))
-                        .col2(resultSet.getInt(COL_2.getName()))
-                        .build());
-
-@lombok.Builder
-private record Table1Row(String col1, int col2) {}
+                .execute(connection, resultSet -> new Row(
+                        resultSet.getString(COL_1.getName()),
+                        resultSet.getInt(COL_2.getName())));
+// Row is defined as:
+record Row(String col1, int col2) {}
 ```
 
 ```java

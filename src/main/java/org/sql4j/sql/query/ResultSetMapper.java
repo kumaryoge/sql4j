@@ -33,16 +33,12 @@ import java.sql.SQLException;
  * <p>
  * 2. When reading multiple columns:
  * <blockquote><pre>
- *     ResultSetMapper{@code <Row>} resultSetMapper = rs -> Row.builder()
- *                                                     .col1(rs.getString("COL_1"))
- *                                                     .col2(rs.getInt("COL_2"))
- *                                                     .col3(rs.getDouble("COL_3"))
- *                                                     .col4(rs.getDate("COL_4"))
- *                                                     .build();
- * </pre></blockquote>
- * Where {@code Row} is defined as:
- * <blockquote><pre>
- *     {@code @lombok.Builder}
+ *     ResultSetMapper{@code <Row>} resultSetMapper = rs -> new Row(
+ *                                                     rs.getString("COL_1"),
+ *                                                     rs.getInt("COL_2"),
+ *                                                     rs.getDouble("COL_3"),
+ *                                                     rs.getDate("COL_4"));
+ *     // Row is defined as:
  *     record Row(String col1, int col2, double col3, Date col4) {}
  * </pre></blockquote>
  *
