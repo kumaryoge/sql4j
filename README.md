@@ -10,20 +10,20 @@ For example:
 <dependency>
     <groupId>io.github.kumaryoge</groupId>
     <artifactId>sql4j</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
 * In Gradle projects, add this dependency in `build.gradle` file
 
 ```groovy
-implementation 'io.github.kumaryoge:sql4j:1.0.0'
+implementation 'io.github.kumaryoge:sql4j:1.0.1'
 ```
 
 * In Gradle - Kotlin projects, add this dependency in `build.gradle.kts` file
 
 ```kotlin
-implementation("io.github.kumaryoge:sql4j:1.0.0")
+implementation("io.github.kumaryoge:sql4j:1.0.1")
 ```
 
 # Usage
