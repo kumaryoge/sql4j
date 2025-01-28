@@ -1,30 +1,9 @@
+[![Maven Central Version](https://img.shields.io/maven-central/v/io.github.kumaryoge/sql4j)](https://central.sonatype.com/artifact/io.github.kumaryoge/sql4j)
+
 # Sql4j
 This is a simple java library to simplify building and executing sql queries in java, without actually hard-coding any sql query in java code.
 
 This library is published to [Maven Central Repository](https://central.sonatype.com/artifact/io.github.kumaryoge/sql4j) where you can find Snippets for adding a dependency on this library in Maven, Gradle and other types of projects.
-For example:
-
-* In Maven projects, add this dependency in `pom.xml` file
-
-```xml
-<dependency>
-    <groupId>io.github.kumaryoge</groupId>
-    <artifactId>sql4j</artifactId>
-    <version>1.0.1</version>
-</dependency>
-```
-
-* In Gradle projects, add this dependency in `build.gradle` file
-
-```groovy
-implementation 'io.github.kumaryoge:sql4j:1.0.1'
-```
-
-* In Gradle - Kotlin projects, add this dependency in `build.gradle.kts` file
-
-```kotlin
-implementation("io.github.kumaryoge:sql4j:1.0.1")
-```
 
 # Usage
 Suppose, in a database, we have a table TABLE_1 with two columns: COL_1 of type String (VARCHAR) and COL_2 of type Integer (INT).
