@@ -1,7 +1,7 @@
 [![Maven Central Version](https://img.shields.io/maven-central/v/io.github.kumaryoge/sql4j)](https://central.sonatype.com/artifact/io.github.kumaryoge/sql4j)
 
 # Sql4j
-This is a simple java library to simplify building and executing sql queries in java, without actually hard-coding any sql query in java code.
+This is a lightweight java library to simplify building and executing sql queries in java, without actually hard-coding any sql query in java code.
 
 This library is published to [Maven Central Repository](https://central.sonatype.com/artifact/io.github.kumaryoge/sql4j) where you can find Snippets for adding a dependency on this library in Maven, Gradle and other types of projects.
 
