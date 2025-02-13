@@ -8,7 +8,7 @@
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>A simple java library to simplify building and executing sql queries in java</description>
+    <description>A lightweight java library to simplify building and executing sql queries in java</description>
     <url>https://github.com/kumaryoge/sql4j</url>
 
     <licenses>
